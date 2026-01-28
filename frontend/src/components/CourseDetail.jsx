@@ -201,15 +201,9 @@ const CourseDetail = ({ courseId }) => {
             loadQuizResults()
           ]);
         } else {
-          // Self-Healing: If we are here, it means backend doesn't know we are enrolled.
-          // But if we are viewing the course (e.g. from cache or just navigated), we should ensure backend is in sync.
-          // However, strictly speaking, we shouldn't auto-enroll unless the user clicked enroll.
-          // But since the user is complaining about "Not updated", likely they "were" enrolled in a previous session (cache)
-          // but DB got wiped/reset. So let's re-enroll them silently to restore state.
-          if (localStorage.getItem('enrollments')) {
-            console.log("⚠️ Backend missing enrollment, repairing...");
-            await enrollInCourse(sectorKey);
-          }
+          // User is NOT enrolled in this course - that's fine, they just need to click "Enroll Now"
+          // Don't auto-enroll - wait for user to explicitly click the enroll button
+          setIsEnrolled(false);
         }
       }
     } catch (e) {
@@ -530,6 +524,14 @@ const CourseDetail = ({ courseId }) => {
                   disabled={loading}
                   className="mt-8 px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-600/20 hover:scale-105 transition-all text-white"
                 >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="animate-spin w-5 h-5 border-2 border-white/30 border-t-white rounded-full" />
+                      Enrolling...
+                    </span>
+                  ) : (
+                    'Enroll Now — Free'
+                  )}
                 </motion.button>
               ) : (
                 <div className="mt-8 flex gap-4">

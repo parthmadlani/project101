@@ -124,7 +124,7 @@ const Header = ({ isAuthenticated, onLoginClick, onLogout }) => {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => window.location.href = '/profile'}
+                    onClick={() => window.history.pushState({}, '', '/profile')}
                     className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-colors relative group"
                     title="My Profile"
                   >
